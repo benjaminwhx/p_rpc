@@ -158,85 +158,85 @@
 服务提供者暴露服务配置：  
 配置类：`com.alibaba.dubbo.config.ServiceConfig`
 
-| 属性 | 对应URL参数 | 类型 | 是否必填 | 缺省值 | 作用 | 描述 | 兼容性 |
-| ----- |  ----- | ----- | ----- | ----- | ----- | ------- | ----- |
-| interface | | class | 必填 | | 服务发现 | 服务接口名 | 1.0.0以上版本 | 
-| ref | | object | 必填 | | 服务发现 | 服务对象实现引用 | 1.0.0以上版本 | 
-| version | version | string | 可选 | 0.0.0 | 服务发现 | 服务版本，建议使用两位数字版本，如：1.0，通常在接口不兼容时版本号才需要升级 | 1.0.0以上版本 | 
-| group | group | string | 可选 | | 服务发现 | 服务分组，当一个接口有多个实现，可以用分组区分 | 1.0.7以上版本 | 
-| path | <path> | string | 可选 | 缺省为接口名 | 服务发现 | 服务路径(注意：1.0不支持自定义路径，总是使用接口名，如果有1.0调2.0，配置服务路径可能不兼容) | 1.0.12以上版本 | 
-| delay | delay | int | 可选 | 0 | 性能调优 | 延迟注册服务时间(毫秒)，设为-1时，表示延迟到Spring容器初始化完成时暴露服务 | 1.0.14以上版本 | 
-| timeout | timeout | int | 可选 | 1000 | 性能调优 | 远程服务调用超时时间(毫秒) | 2.0.0以上版本 | 
-| retries | retries | int | 可选 | 2 | 性能调优 | 远程服务调用重试次数，不包括第一次调用，不需要重试请设为0 | 2.0.0以上版本 | 
-| connections | connections | int | 可选 | 100 | 性能调优 | 对每个提供者的最大连接数，rmi、http、hessian等短连接协议表示限制连接数，dubbo等长连接协表示建立的长连接个数 | 2.0.0以上版本 | 
-| loadbalance | loadbalance | string | 可选 | random | 性能调优 | 负载均衡策略，可选值：random,roundrobin,leastactive，分别表示：随机，轮循，最少活跃调用 | 2.0.0以上版本 | 
-| async | async | boolean | 可选 | false | 性能调优 | 是否缺省异步执行，不可靠异步，只是忽略返回值，不阻塞执行线程 | 2.0.0以上版本 |
-| stub | stub | class/boolean | 可选 | false | 服务治理 | 设为true，表示使用缺省代理类名，即：接口名 + Local后缀，服务接口客户端本地代理类名，用于在客户端执行本地逻辑，如本地缓存等，该本地代理类的构造函数必须允许传入远程代理对象，构造函数如：public XxxServiceLocal(XxxService xxxService) | 2.0.0以上版本 |
-| mock | mock | class/boolean | 可选 | false | 服务治理 | 设为true，表示使用缺省Mock类名，即：接口名 + Mock后缀，服务接口调用失败Mock实现类，该Mock类必须有一个无参构造函数，与Local的区别在于，Local总是被执行，而Mock只在出现非业务异常(比如超时，网络异常等)时执行，Local在远程调用之前执行，Mock在远程调用后执行。 | 2.0.0以上版本 |
-| token | token | string/boolean | 可选 | false | 服务治理 | 令牌验证，为空表示不开启，如果为true，表示随机生成动态令牌，否则使用静态令牌，令牌的作用是防止消费者绕过注册中心直接访问，保证注册中心的授权功能有效，如果使用点对点调用，需关闭令牌功能 | 2.0.0以上版本 |
-| registry | | string | 可选 | 缺省向所有registry注册 | 配置关联 | 向指定注册中心注册，在多个注册中心时使用，值为<dubbo:registry>的id属性，多个注册中心ID用逗号分隔，如果不想将该服务注册到任何registry，可将值设为N/A | 2.0.0以上版本 |
-| provider | | string | 可选 | 缺使用第一个provider配置 | 配置关联 | 指定provider，值为<dubbo:provider>的id属性 | 2.0.0以上版本 |
-| deprecated | deprecated | boolean | 可选 | false | 服务治理 | 服务是否过时，如果设为true，消费方引用时将打印服务过时警告error日志 | 2.0.5以上版本 |
-| dynamic | dynamic | boolean | 可选 | true | 服务治理 | 服务是否动态注册，如果设为false，注册后将显示后disable状态，需人工启用，并且服务提供者停止时，也不会自动取消册，需人工禁用。 | 2.0.5以上版本 |
-| accesslog | accesslog | string/boolean | 可选 | false | 服务治理 | 设为true，将向logger中输出访问日志，也可填写访问日志文件路径，直接把访问日志输出到指定文件 | 2.0.5以上版本 |
-| owner | owner | string | 可选 | | 服务治理 | 服务负责人，用于服务治理，请填写负责人公司邮箱前缀 | 2.0.5以上版本 |
-| document | document | string | 可选 | | 服务治理 | 服务文档URL | 2.0.5以上版本 |
-| weight | weight | int | 可选 | | 性能调优 | 服务权重 | 2.0.5以上版本 |
-| executes | executes | int | 可选 | 0 | 性能调优 | 服务提供者每服务每方法最大可并行执行请求数 | 2.0.5以上版本 |
-| actives | actives | int | 可选 | 0 | 性能调优 | 每服务消费者每服务每方法最大并发调用数 | 2.0.5以上版本 |
-| proxy | proxy | string | 可选 | javassist | 性能调优 | 生成动态代理方式，可选：jdk/javassist | 2.0.5以上版本 |
-| cluster | cluster | string | 可选 | failover | 性能调优 | 集群方式，可选：failover/failfast/failsafe/failback/forking | 2.0.5以上版本 |
-| filter | service.filter | string | 可选 | default | 性能调优 | 服务提供方远程调用过程拦截器名称，多个名称用逗号分隔 | 2.0.5以上版本 |
-| listener | exporter.listener | string | 可选 | default | 性能调优 | 服务提供方导出服务监听器名称，多个名称用逗号分隔 |
-| protocol | | string | 可选 | | 配置关联 | 使用指定的协议暴露服务，在多协议时使用，值为<dubbo:protocol>的id属性，多个协议ID用逗号分隔 | 2.0.5以上版本 |
-| layer | layer | string | 可选 | | 服务治理 | 服务提供者所在的分层。如：biz、dao、intl:web、china:acton。 | 2.0.7以上版本 |
-| register | register | boolean | 可选 | true | 服务治理 | 该协议的服务是否注册到注册中心 | 2.0.8以上版本 |
+| 属性 | 类型 | 是否必填 | 缺省值 | 作用 | 描述 | 兼容性 |
+| ----- | ----- | ----- | ----- | ----- | ------- | ----- |
+| interface | class | 必填 | | 服务发现 | 服务接口名 | 1.0.0以上版本 | 
+| ref | object | 必填 | | 服务发现 | 服务对象实现引用 | 1.0.0以上版本 | 
+| version | string | 可选 | 0.0.0 | 服务发现 | 服务版本，建议使用两位数字版本，如：1.0，通常在接口不兼容时版本号才需要升级 | 1.0.0以上版本 | 
+| group | string | 可选 | | 服务发现 | 服务分组，当一个接口有多个实现，可以用分组区分 | 1.0.7以上版本 | 
+| path | string | 可选 | 缺省为接口名 | 服务发现 | 服务路径(注意：1.0不支持自定义路径，总是使用接口名，如果有1.0调2.0，配置服务路径可能不兼容) | 1.0.12以上版本 | 
+| delay | int | 可选 | 0 | 性能调优 | 延迟注册服务时间(毫秒)，设为-1时，表示延迟到Spring容器初始化完成时暴露服务 | 1.0.14以上版本 | 
+| timeout | int | 可选 | 1000 | 性能调优 | 远程服务调用超时时间(毫秒) | 2.0.0以上版本 | 
+| retries | int | 可选 | 2 | 性能调优 | 远程服务调用重试次数，不包括第一次调用，不需要重试请设为0 | 2.0.0以上版本 | 
+| connections | int | 可选 | 100 | 性能调优 | 对每个提供者的最大连接数，rmi、http、hessian等短连接协议表示限制连接数，dubbo等长连接协表示建立的长连接个数 | 2.0.0以上版本 | 
+| loadbalance | string | 可选 | random | 性能调优 | 负载均衡策略，可选值：random,roundrobin,leastactive，分别表示：随机，轮循，最少活跃调用 | 2.0.0以上版本 | 
+| async | boolean | 可选 | false | 性能调优 | 是否缺省异步执行，不可靠异步，只是忽略返回值，不阻塞执行线程 | 2.0.0以上版本 |
+| stub | class/boolean | 可选 | false | 服务治理 | 设为true，表示使用缺省代理类名，即：接口名 + Local后缀，服务接口客户端本地代理类名，用于在客户端执行本地逻辑，如本地缓存等，该本地代理类的构造函数必须允许传入远程代理对象，构造函数如：public XxxServiceLocal(XxxService xxxService) | 2.0.0以上版本 |
+| mock | class/boolean | 可选 | false | 服务治理 | 设为true，表示使用缺省Mock类名，即：接口名 + Mock后缀，服务接口调用失败Mock实现类，该Mock类必须有一个无参构造函数，与Local的区别在于，Local总是被执行，而Mock只在出现非业务异常(比如超时，网络异常等)时执行，Local在远程调用之前执行，Mock在远程调用后执行。 | 2.0.0以上版本 |
+| token | string/boolean | 可选 | false | 服务治理 | 令牌验证，为空表示不开启，如果为true，表示随机生成动态令牌，否则使用静态令牌，令牌的作用是防止消费者绕过注册中心直接访问，保证注册中心的授权功能有效，如果使用点对点调用，需关闭令牌功能 | 2.0.0以上版本 |
+| registry | string | 可选 | 缺省向所有registry注册 | 配置关联 | 向指定注册中心注册，在多个注册中心时使用，值为<dubbo:registry>的id属性，多个注册中心ID用逗号分隔，如果不想将该服务注册到任何registry，可将值设为N/A | 2.0.0以上版本 |
+| provider | string | 可选 | 缺使用第一个provider配置 | 配置关联 | 指定provider，值为<dubbo:provider>的id属性 | 2.0.0以上版本 |
+| deprecated | boolean | 可选 | false | 服务治理 | 服务是否过时，如果设为true，消费方引用时将打印服务过时警告error日志 | 2.0.5以上版本 |
+| dynamic | boolean | 可选 | true | 服务治理 | 服务是否动态注册，如果设为false，注册后将显示后disable状态，需人工启用，并且服务提供者停止时，也不会自动取消册，需人工禁用。 | 2.0.5以上版本 |
+| accesslog | string/boolean | 可选 | false | 服务治理 | 设为true，将向logger中输出访问日志，也可填写访问日志文件路径，直接把访问日志输出到指定文件 | 2.0.5以上版本 |
+| owner | string | 可选 | | 服务治理 | 服务负责人，用于服务治理，请填写负责人公司邮箱前缀 | 2.0.5以上版本 |
+| document | string | 可选 | | 服务治理 | 服务文档URL | 2.0.5以上版本 |
+| weight | int | 可选 | | 性能调优 | 服务权重 | 2.0.5以上版本 |
+| executes | int | 可选 | 0 | 性能调优 | 服务提供者每服务每方法最大可并行执行请求数 | 2.0.5以上版本 |
+| actives | int | 可选 | 0 | 性能调优 | 每服务消费者每服务每方法最大并发调用数 | 2.0.5以上版本 |
+| proxy | string | 可选 | javassist | 性能调优 | 生成动态代理方式，可选：jdk/javassist | 2.0.5以上版本 |
+| cluster | string | 可选 | failover | 性能调优 | 集群方式，可选：failover/failfast/failsafe/failback/forking | 2.0.5以上版本 |
+| filter | string | 可选 | default | 性能调优 | 服务提供方远程调用过程拦截器名称，多个名称用逗号分隔 | 2.0.5以上版本 |
+| listener | string | 可选 | default | 性能调优 | 服务提供方导出服务监听器名称，多个名称用逗号分隔 |
+| protocol | string | 可选 | | 配置关联 | 使用指定的协议暴露服务，在多协议时使用，值为<dubbo:protocol>的id属性，多个协议ID用逗号分隔 | 2.0.5以上版本 |
+| layer | string | 可选 | | 服务治理 | 服务提供者所在的分层。如：biz、dao、intl:web、china:acton。 | 2.0.7以上版本 |
+| register | boolean | 可选 | true | 服务治理 | 该协议的服务是否注册到注册中心 | 2.0.8以上版本 |
 
 ## 7、<dubbo:reference>
 
 服务消费者引用服务配置：  
 配置类：`com.alibaba.dubbo.config.ReferenceConfig`
 
-| 属性 | 对应URL参数 | 类型 | 是否必填 | 缺省值 | 作用 | 描述 | 兼容性 |
-| ------------- |  ----- | ------------- | ----- | ----- | ----- | ----- | ----- |
-| id | | string | 必填 | | 配置关联 | 服务引用BeanId | 1.0.0以上版本 | 
-| interface | | class | 必填 | | 服务发现 | 服务接口名 | 1.0.0以上版本 | 
-| version | version | string | 可选 | | 服务发现 | 服务版本，与服务提供者的版本一致 | 1.0.0以上版本 | 
-| group | group | string | 可选 | | 服务发现 | 服务分组，当一个接口有多个实现，可以用分组区分，必需和服务提供方一致 | 1.0.7以上版本 | 
-| timeout | timeout | long | 可选 | 缺省使用<dubbo:consumer>的timeout | 性能调优 | 服务方法调用超时时间(毫秒) | 1.0.5以上版本 | 
-| retries | retries | int | 可选 | 缺省使用<dubbo:consumer>的retries | 性能调优 | 远程服务调用重试次数，不包括第一次调用，不需要重试请设为0 | 2.0.0以上版本 | 
-| connections | connections | int | 可选 | 缺省使用<dubbo:consumer>的connections | 性能调优 | 对每个提供者的最大连接数，rmi、http、hessian等短连接协议表示限制连接数，dubbo等长连接协表示建立的长连接个数 | 2.0.0以上版本 | 
-| loadbalance | loadbalance | string | 可选 | 缺省使用<dubbo:consumer>的loadbalance | 性能调优 | 负载均衡策略，可选值：random,roundrobin,leastactive，分别表示：随机，轮循，最少活跃调用 | 2.0.0以上版本 | 
-| async | async | boolean | 可选 | 缺省使用<dubbo:consumer>的async | 性能调优 | 是否异步执行，不可靠异步，只是忽略返回值，不阻塞执行线程 | 2.0.0以上版本 | 
-| generic | generic | boolean | 可选 | 缺省使用<dubbo:consumer>的generic | 服务治理 | 是否缺省泛化接口，如果为泛化接口，将返回GenericService | 2.0.0以上版本 | 
-| check | check | boolean | 可选 | 缺省使用<dubbo:consumer>的check | 服务治理 | 启动时检查提供者是否存在，true报错，false忽略 | 2.0.0以上版本 | 
-| url | url | string | 可选 | | 服务治理 | 点对点直连服务提供者地址，将绕过注册中心 | 1.0.6以上版本 | 
-| stub | stub | class/boolean | 可选 | | 服务治理 | 服务接口客户端本地代理类名，用于在客户端执行本地逻辑，如本地缓存等，该本地代理类的构造函数必须允许传入远程代理对象，构造函数如：public XxxServiceLocal(XxxService xxxService) | 2.0.0以上版本 | 
-| mock | mock | class/boolean | 可选 | | 服务治理 | 服务接口调用失败Mock实现类名，该Mock类必须有一个无参构造函数，与Local的区别在于，Local总是被执行，而Mock只在出现非业务异常(比如超时，网络异常等)时执行，Local在远程调用之前执行，Mock在远程调用后执行。 | Dubbo1.0.13及其以上版本支持 | 
-| cache | cache | string/boolean | 可选 | | 服务治理 | 以调用参数为key，缓存返回结果，可选：lru, | threadlocal, | jcache等 | Dubbo2.1.0及其以上版本支持 | 
-| validation | validation | boolean | 可选 | | 服务治理 | 是否启用JSR303标准注解验证，如果启用，将对方法参数上的注解进行校验 | Dubbo2.1.0及其以上版本支持 | 
-| proxy | proxy | boolean | 可选 | javassist | 性能调优 | 选择动态代理实现策略，可选：javassist, | jdk | 2.0.2以上版本 | 
-| client | client | string | 可选 | | 性能调优 | 客户端传输类型设置，如Dubbo协议的netty或mina。 | Dubbo2.0.0以上版本支持 | 
-| registry | | string | 可选 | 缺省将从所有注册中心获服务列表后合并结果 | 配置关联 | 从指定注册中心注册获取服务列表，在多个注册中心时使用，值为<dubbo:registry>的id属性，多个注册中心ID用逗号分隔 | 2.0.0以上版本 | 
-| owner | owner | string | 可选 | | 服务治理 | 调用服务负责人，用于服务治理，请填写负责人公司邮箱前缀 | 2.0.5以上版本 | 
-| actives | actives | int | 可选 | 0 | 性能调优 | 每服务消费者每服务每方法最大并发调用数 | 2.0.5以上版本 | 
-| cluster | cluster | string | 可选 | failover | 性能调优 | 集群方式，可选：failover/failfast/failsafe/failback/forking | 2.0.5以上版本 | 
-| filter | reference.filter | string | 可选 | default | 性能调优 | 服务消费方远程调用过程拦截器名称，多个名称用逗号分隔 | 2.0.5以上版本 | 
-| listener | invoker.listener | string | 可选 | default | 性能调优 | 服务消费方引用服务监听器名称，多个名称用逗号分隔 | 2.0.5以上版本 | 
-| layer | layer | string | 可选 | | 服务治理 | 服务调用者所在的分层。如：biz、dao、intl:web、china:acton。 | 2.0.7以上版本 | 
-| init | init | boolean | 可选 | false | 性能调优 | 是否在afterPropertiesSet()时饥饿初始化引用，否则等到有人注入或引用该实例时再初始化。 | 2.0.10以上版本 | 
-| protocol | protocol | string | 可选 | | 服力治理 | 只调用指定协议的服务提供方，其它协议忽略。 | 2.2.0以上版本 |
+| 属性 | 类型 | 是否必填 | 缺省值 | 作用 | 描述 | 兼容性 |
+| ----------- | ------------- | ----- | ----- | ----- | ----- | ----- |
+| id | string | 必填 | | 配置关联 | 服务引用BeanId | 1.0.0以上版本 | 
+| interface | class | 必填 | | 服务发现 | 服务接口名 | 1.0.0以上版本 | 
+| version | string | 可选 | | 服务发现 | 服务版本，与服务提供者的版本一致 | 1.0.0以上版本 | 
+| group | string | 可选 | | 服务发现 | 服务分组，当一个接口有多个实现，可以用分组区分，必需和服务提供方一致 | 1.0.7以上版本 | 
+| timeout | long | 可选 | 缺省使用<dubbo:consumer>的timeout | 性能调优 | 服务方法调用超时时间(毫秒) | 1.0.5以上版本 | 
+| retries | int | 可选 | 缺省使用<dubbo:consumer>的retries | 性能调优 | 远程服务调用重试次数，不包括第一次调用，不需要重试请设为0 | 2.0.0以上版本 | 
+| connections | int | 可选 | 缺省使用<dubbo:consumer>的connections | 性能调优 | 对每个提供者的最大连接数，rmi、http、hessian等短连接协议表示限制连接数，dubbo等长连接协表示建立的长连接个数 | 2.0.0以上版本 | 
+| loadbalance | string | 可选 | 缺省使用<dubbo:consumer>的loadbalance | 性能调优 | 负载均衡策略，可选值：random,roundrobin,leastactive，分别表示：随机，轮循，最少活跃调用 | 2.0.0以上版本 | 
+| async | boolean | 可选 | 缺省使用<dubbo:consumer>的async | 性能调优 | 是否异步执行，不可靠异步，只是忽略返回值，不阻塞执行线程 | 2.0.0以上版本 | 
+| generic | boolean | 可选 | 缺省使用<dubbo:consumer>的generic | 服务治理 | 是否缺省泛化接口，如果为泛化接口，将返回GenericService | 2.0.0以上版本 | 
+| check | boolean | 可选 | 缺省使用<dubbo:consumer>的check | 服务治理 | 启动时检查提供者是否存在，true报错，false忽略 | 2.0.0以上版本 | 
+| url | string | 可选 | | 服务治理 | 点对点直连服务提供者地址，将绕过注册中心 | 1.0.6以上版本 | 
+| stub | class/boolean | 可选 | | 服务治理 | 服务接口客户端本地代理类名，用于在客户端执行本地逻辑，如本地缓存等，该本地代理类的构造函数必须允许传入远程代理对象，构造函数如：public XxxServiceLocal(XxxService xxxService) | 2.0.0以上版本 | 
+| mock | class/boolean | 可选 | | 服务治理 | 服务接口调用失败Mock实现类名，该Mock类必须有一个无参构造函数，与Local的区别在于，Local总是被执行，而Mock只在出现非业务异常(比如超时，网络异常等)时执行，Local在远程调用之前执行，Mock在远程调用后执行。 | Dubbo1.0.13及其以上版本支持 | 
+| cache | string/boolean | 可选 | | 服务治理 | 以调用参数为key，缓存返回结果，可选：lru, | threadlocal, | jcache等 | Dubbo2.1.0及其以上版本支持 | 
+| validation | boolean | 可选 | | 服务治理 | 是否启用JSR303标准注解验证，如果启用，将对方法参数上的注解进行校验 | Dubbo2.1.0及其以上版本支持 | 
+| proxy | boolean | 可选 | javassist | 性能调优 | 选择动态代理实现策略，可选：javassist, | jdk | 2.0.2以上版本 | 
+| client | string | 可选 | | 性能调优 | 客户端传输类型设置，如Dubbo协议的netty或mina。 | Dubbo2.0.0以上版本支持 | 
+| registry | string | 可选 | 缺省将从所有注册中心获服务列表后合并结果 | 配置关联 | 从指定注册中心注册获取服务列表，在多个注册中心时使用，值为<dubbo:registry>的id属性，多个注册中心ID用逗号分隔 | 2.0.0以上版本 | 
+| owner | string | 可选 | | 服务治理 | 调用服务负责人，用于服务治理，请填写负责人公司邮箱前缀 | 2.0.5以上版本 | 
+| actives | int | 可选 | 0 | 性能调优 | 每服务消费者每服务每方法最大并发调用数 | 2.0.5以上版本 | 
+| cluster | string | 可选 | failover | 性能调优 | 集群方式，可选：failover/failfast/failsafe/failback/forking | 2.0.5以上版本 | 
+| filter | string | 可选 | default | 性能调优 | 服务消费方远程调用过程拦截器名称，多个名称用逗号分隔 | 2.0.5以上版本 | 
+| listener | string | 可选 | default | 性能调优 | 服务消费方引用服务监听器名称，多个名称用逗号分隔 | 2.0.5以上版本 | 
+| layer | string | 可选 | | 服务治理 | 服务调用者所在的分层。如：biz、dao、intl:web、china:acton。 | 2.0.7以上版本 | 
+| init | boolean | 可选 | false | 性能调优 | 是否在afterPropertiesSet()时饥饿初始化引用，否则等到有人注入或引用该实例时再初始化。 | 2.0.10以上版本 | 
+| protocol | string | 可选 | | 服力治理 | 只调用指定协议的服务提供方，其它协议忽略。 | 2.2.0以上版本 |
 
 ## 8、<dubbo:module>
 
 模块信息配置： 配置类：`com.alibaba.dubbo.config.ModuleConfig`
 
-| 属性 | 对应URL参数 | 类型 | 是否必填 | 缺省值 | 作用 | 描述 | 兼容性 |
-| ------------- |  ----- | ------------- | ----- | ----- | ----- | ----- | ----- |
-| name | module | string | 必填 | 服务治理 | 当前模块名称，用于注册中心计算模块间依赖关系 | 2.2.0以上版本 | 
-| version | module.version | string | 可选 | 服务治理 | 当前模块的版本 | 2.2.0以上版本 | 
-| owner | owner | string | 可选 | 服务治理 | 模块负责人，用于服务治理，请填写负责人公司邮箱前缀 | 2.2.0以上版本 | 
-| organization | organization | string | 可选 | 服务治理 | 组织名称(BU或部门)，用于注册中心区分服务来源，此配置项建议不要使用autoconfig，直接写死在配置中，比如china,intl,itu,crm,asc,dw,aliexpress等 | 2.2.0以上版本 |
+| 属性 | 类型 | 是否必填 | 缺省值 | 作用 | 描述 | 兼容性 |
+| ------------- | ------------- | ----- | ----- | ----- | ----- | ----- |
+| name | string | 必填 | 服务治理 | 当前模块名称，用于注册中心计算模块间依赖关系 | 2.2.0以上版本 | 
+| version | string | 可选 | 服务治理 | 当前模块的版本 | 2.2.0以上版本 | 
+| owner | string | 可选 | 服务治理 | 模块负责人，用于服务治理，请填写负责人公司邮箱前缀 | 2.2.0以上版本 | 
+| organization | string | 可选 | 服务治理 | 组织名称(BU或部门)，用于注册中心区分服务来源，此配置项建议不要使用autoconfig，直接写死在配置中，比如china,intl,itu,crm,asc,dw,aliexpress等 | 2.2.0以上版本 |
 
 ## 9、<dubbo:method>
 
@@ -244,24 +244,24 @@
 配置类：`com.alibaba.dubbo.config.MethodConfig`  
 说明：该标签为`<dubbo:service>`或`<dubbo:reference>`的子标签，用于控制到方法级，
 
-| 属性 | 对应URL参数 | 类型 | 是否必填 | 缺省值 | 作用 | 描述 | 兼容性 |
-| ------------- |  ----- | ------------- | ----- | ----- | ----- | ----- | ----- |
-| name | string | 必填 | 标识 | 方法名 | 1.0.8以上版本 | 
-| timeout | <metodName>.timeout | int | 可选 | 缺省为的timeout | 性能调优 | 方法调用超时时间(毫秒) | 1.0.8以上版本 | 
-| retries | <metodName>.retries | int | 可选 | 缺省为<dubbo:reference>的retries | 性能调优 | 远程服务调用重试次数，不包括第一次调用，不需要重试请设为0 | 2.0.0以上版本 | 
-| loadbalance | <metodName>.loadbalance | string | 可选 | 缺省为的loadbalance | 性能调优 | 负载均衡策略，可选值：random,roundrobin,leastactive，分别表示：随机，轮循，最少活跃调用 | 2.0.0以上版本 | 
-| async | <metodName>.async | boolean | 可选 | 缺省为<dubbo:reference>的async | 性能调优 | 是否异步执行，不可靠异步，只是忽略返回值，不阻塞执行线程 | 1.0.9以上版本 | 
-| sent | <methodName>.sent | boolean | 可选 | true | 性能调优 | 异步调用时，标记sent=true时，表示网络已发出数据 | 2.0.6以上版本 | 
-| actives | <metodName>.actives | int | 可选 | 0 | 性能调优 | 每服务消费者最大并发调用限制 | 2.0.5以上版本 | 
-| executes | <metodName>.executes | int | 可选 | 0 | 性能调优 | 每服务每方法最大使用线程数限制，此属性只在<dubbo:method>作为<dubbo:service>子标签时有效 | 2.0.5以上版本 | 
-| deprecated | <methodName>.deprecated | boolean | 可选 | false | 服务治理 | 服务方法是否过时，此属性只在<dubbo:method>作为<dubbo:service>子标签时有效 | 2.0.5以上版本 | 
-| sticky | <methodName>.sticky | boolean | 可选 | false | 服务治理 | 设置true 该接口上的所有方法使用同一个provider.如果需要更复杂的规则，请使用用路由 | 2.0.6以上版本 | 
-| return | <methodName>.return | boolean | 可选 | true | 性能调优 | 方法调用是否需要返回值,async设置为true时才生效，如果设置为true，则返回future，或回调onreturn等方法，如果设置为false，则请求发送成功后直接返回Null | 2.0.6以上版本 | 
-| oninvoke | attribute属性，不在URL中体现 | String | 可选 | 性能调优 | 方法执行前拦截 | 2.0.6以上版本 | 
-| onreturn | attribute属性，不在URL中体现 | String | 可选 | 性能调优 | 方法执行返回后拦截 | 2.0.6以上版本 | 
-| onthrow | attribute属性，不在URL中体现 | String | 可选 | 性能调优 | 方法执行有异常拦截 | 2.0.6以上版本 | 
-| cache | <methodName>.cache | string/boolean | 可选 | 服务治理 | 以调用参数为key，缓存返回结果，可选：lru, threadlocal, jcache等 | Dubbo2.1.0及其以上版本支持 | 
-| validation | <methodName>.validation | boolean | 可选 | 服务治理 | 是否启用JSR303标准注解验证，如果启用，将对方法参数上的注解进行校验 | Dubbo2.1.0及其以上版本支持 |
+| 属性 | 类型 | 是否必填 | 缺省值 | 作用 | 描述 | 兼容性 |
+| ------------- | ------------- | ----- | ----- | ----- | ----- | ----- |
+| name | string | 必填 | | 标识 | 方法名 | 1.0.8以上版本 | 
+| timeout | int | 可选 | 缺省为的timeout | 性能调优 | 方法调用超时时间(毫秒) | 1.0.8以上版本 | 
+| retries | int | 可选 | 缺省为<dubbo:reference>的retries | 性能调优 | 远程服务调用重试次数，不包括第一次调用，不需要重试请设为0 | 2.0.0以上版本 | 
+| loadbalance | string | 可选 | 缺省为的loadbalance | 性能调优 | 负载均衡策略，可选值：random,roundrobin,leastactive，分别表示：随机，轮循，最少活跃调用 | 2.0.0以上版本 | 
+| async | boolean | 可选 | 缺省为<dubbo:reference>的async | 性能调优 | 是否异步执行，不可靠异步，只是忽略返回值，不阻塞执行线程 | 1.0.9以上版本 | 
+| sent | boolean | 可选 | true | 性能调优 | 异步调用时，标记sent=true时，表示网络已发出数据 | 2.0.6以上版本 | 
+| actives | int | 可选 | 0 | 性能调优 | 每服务消费者最大并发调用限制 | 2.0.5以上版本 | 
+| executes | int | 可选 | 0 | 性能调优 | 每服务每方法最大使用线程数限制，此属性只在<dubbo:method>作为<dubbo:service>子标签时有效 | 2.0.5以上版本 | 
+| deprecated | boolean | 可选 | false | 服务治理 | 服务方法是否过时，此属性只在<dubbo:method>作为<dubbo:service>子标签时有效 | 2.0.5以上版本 | 
+| sticky | boolean | 可选 | false | 服务治理 | 设置true 该接口上的所有方法使用同一个provider.如果需要更复杂的规则，请使用用路由 | 2.0.6以上版本 | 
+| return | boolean | 可选 | true | 性能调优 | 方法调用是否需要返回值,async设置为true时才生效，如果设置为true，则返回future，或回调onreturn等方法，如果设置为false，则请求发送成功后直接返回Null | 2.0.6以上版本 | 
+| oninvoke | String | 可选 | 性能调优 | 方法执行前拦截 | 2.0.6以上版本 | 
+| onreturn | String | 可选 | 性能调优 | 方法执行返回后拦截 | 2.0.6以上版本 | 
+| onthrow | String | 可选 | 性能调优 | 方法执行有异常拦截 | 2.0.6以上版本 | 
+| cache | string/boolean | 可选 | 服务治理 | 以调用参数为key，缓存返回结果，可选：lru, threadlocal, jcache等 | Dubbo2.1.0及其以上版本支持 | 
+| validation | boolean | 可选 | 服务治理 | 是否启用JSR303标准注解验证，如果启用，将对方法参数上的注解进行校验 | Dubbo2.1.0及其以上版本支持 |
 
 比如：
 
@@ -283,11 +283,11 @@
 </dubbo:method>
 ```
 
-| 属性 | 对应URL参数 | 类型 | 是否必填 | 缺省值 | 作用 | 描述 | 兼容性 |
-| ------------- |  ----- | ------------- | ----- | ----- | ----- | ----- | ----- |
-| index | int | 必填 | 标识 | 方法名 | 2.0.6以上版本 | 
-| type | String | 与index二选一 | 标识 | 通过参数类型查找参数的index | 2.0.6以上版本 | 
-| callback | <metodName><index>.retries | boolean | 可选 | 服务治理 | 参数是否为callback接口，如果为callback，服务提供方将生成反向代理，可以从服务提供方反向调用消费方，通常用于事件推送. | 2.0.6以上版本 |
+| 属性 | 类型 | 是否必填 | 缺省值 | 作用 | 描述 | 兼容性 |
+| ------------- | ------------- | ----- | ----- | ----- | ----- | ----- |
+| index | int | 必填 | | 标识 | 方法名 | 2.0.6以上版本 | 
+| type | String | 与index二选一 | | 标识 | 通过参数类型查找参数的index | 2.0.6以上版本 | 
+| callback | boolean | 可选 | | 服务治理 | 参数是否为callback接口，如果为callback，服务提供方将生成反向代理，可以从服务提供方反向调用消费方，通常用于事件推送. | 2.0.6以上版本 |
 
 ## 11、<dubbo:parameter>
 
@@ -296,10 +296,10 @@
 
 说明：该标签为`<dubbo:protocol>`或`<dubbo:service>`或`<dubbo:provider>`或`<dubbo:reference>`或`<dubbo:consumer>`的子标签，用于配置自定义参数，该配置项将作为扩展点设置自定义参数使用。
 
-| 属性 | 对应URL参数 | 类型 | 是否必填 | 缺省值 | 作用 | 描述 | 兼容性 |
-| ------------- |  ----- | ------------- | ----- | ----- | ----- | ----- | ----- |
-| key | key | string | 必填 | 服务治理 | 路由参数键 | 2.0.0以上版本 | 
-| value | value | string | 必填 | 服务治理 | 路由参数值 | 2.0.0以上版本 |
+| 属性 | 类型 | 是否必填 | 缺省值 | 作用 | 描述 | 兼容性 |
+| ------------- | ------------- | ----- | ----- | ----- | ----- | ----- |
+| key | string | 必填 | | 服务治理 | 路由参数键 | 2.0.0以上版本 | 
+| value | string | 必填 | | 服务治理 | 路由参数值 | 2.0.0以上版本 |
 
 比如：
 
@@ -320,7 +320,7 @@
 监控中心配置：  
 配置类：`com.alibaba.dubbo.config.MonitorConfig`
 
-| 属性 | 对应URL参数 | 类型 | 是否必填 | 缺省值 | 作用 | 描述 | 兼容性 |
-| ------------- |  ----- | ------------- | ----- | ----- | ----- | ----- | ----- |
-| protocol | protocol | string | 可选 | dubbo | 服务治理 | 监控中心协议，如果为protocol="registry"，表示从注册中心发现监控中心地址，否则直连监控中心。 | 2.0.9以上版本 | 
-| address | <url> | string | 可选 | N/A | 服务治理 | 直连监控中心服务器地址，address="10.20.130.230:12080" | 1.0.16以上版本 |
+| 属性 | 类型 | 是否必填 | 缺省值 | 作用 | 描述 | 兼容性 |
+| ------------- | ------------- | ----- | ----- | ----- | ----- | ----- |
+| protocol | string | 可选 | dubo | 服务治理 | 监控中心协议，如果为protocol="registry"，表示从注册中心发现监控中心地址，否则直连监控中心。 | 2.0.9以上版本 |
+| address | string | 可选 | N/A | 服务治理 | 直连监控中心服务器地址，address="10.20.130.230:12080" | 1.0.16以上版本 |
