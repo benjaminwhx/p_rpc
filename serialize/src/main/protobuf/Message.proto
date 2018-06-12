@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+import "InnerMessage.proto";
+package com.github.bean.protobuf;
+option java_package = "com.github.bean.protobuf";
+option java_outer_classname = "MessageProtos";
+option optimize_for = SPEED ;  //CODE_SIZE,LITE_RUNTIME
+option java_generic_services = false;
+message Message {
+    required string strObj = 1 [default="hello"];
+    optional int32 int32Obj = 2;
+    optional int64 int64Obj = 3;
+    optional bool   boolObj = 12;
+    optional bytes  bytesObj = 13;
+    optional float folatObj = 14 [deprecated=true];
+    repeated double doubleObj = 15 [packed=true]; //
+    optional InnerMessage innerMessage = 16;
+}

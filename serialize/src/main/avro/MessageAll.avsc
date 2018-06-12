@@ -1,0 +1,29 @@
+{
+    "namespace": "com.github.bean.avro",
+    "type": "record",
+    "doc": "this schema about Message",
+    "name": "MessageAvro",
+    "fields": [
+         {"name": "strObj", "type": "string"},
+         {"name": "floatObj",  "type": "float"},
+         {"name": "doubleObjList", "type": {"type": "array", "items": "double"}},
+         {"name": "boolObj",  "type": "boolean"},
+         {"name": "bytesObj",  "type": "bytes"},
+         {"name": "int32Obj",  "type": "int"},
+         {"name": "int64Obj",  "type": "long"},
+         {"name": "innerMessageObj",  "type": {
+              "namespace": "com.github.bean.avro",
+              "type": "record",
+              "name": "InnerMessageAvro",
+              "fields": [
+                  {"name": "name", "type": "string"},
+                  {"name": "id",  "type": "int"},
+                  {"name": "enumTypeObj", "type": {
+                        "type": "enum",
+                        "name": "EnumTypeAvro",
+                        "symbols" : ["UNIVERSAL", "WEB", "IMAGES", "LOCAL", "NEWS", "PRODUCTS", "VIDEO"]
+                  }}
+              ]
+         }}
+    ]
+}
