@@ -32,15 +32,15 @@ import java.util.concurrent.TimeUnit;
 @Threads(8)
 public class BenchmarkTest {
 
-	private ISerializer javaSerializer = new DefaultJavaSerializer();
-	private ISerializer xStreamSerializer = new XmlSerializer();
-	private ISerializer javaXmlSerializer = new Xml2Serializer();
-	private ISerializer fastJsonSerializer = new FastJsonSerializer();
-	private ISerializer hessianSerializer = new HessianSerializer();
-	private ISerializer protobufSerializer = new ProtobufSerializer();
-	private ISerializer protostuffSerializer = new ProtostuffSerializer();
-	private ISerializer avroSerializer = new AvroSerializer();
-	private ISerializer marshallingSerializer = new MarshallingSerializer();
+	public ISerializer javaSerializer = new DefaultJavaSerializer();
+	public ISerializer xStreamSerializer = new XmlSerializer();
+	public ISerializer javaXmlSerializer = new Xml2Serializer();
+	public ISerializer fastJsonSerializer = new FastJsonSerializer();
+	public ISerializer hessianSerializer = new HessianSerializer();
+	public ISerializer protobufSerializer = new ProtobufSerializer();
+	public ISerializer protostuffSerializer = new ProtostuffSerializer();
+	public ISerializer avroSerializer = new AvroSerializer();
+	public ISerializer marshallingSerializer = new MarshallingSerializer();
 	private MessageProtos.Message probufBean = getProtobufBean();
 	private MessageAvro avroBean = getAvroBean();
 	private MessageObj pojoBean = getPojoBean();

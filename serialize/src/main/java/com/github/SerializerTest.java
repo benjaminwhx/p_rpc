@@ -24,7 +24,7 @@ import java.util.Arrays;
  * Date: 2018-06-06
  * Time: 0:34 pm
  */
-public class PersonTest {
+public class SerializerTest {
 
     private void testJavaSerializer() {
         // 需要实现Serializable接口
@@ -166,7 +166,7 @@ public class PersonTest {
 	}
 
     public static void main(String[] args) throws Exception {
-        PersonTest personTest = new PersonTest();
+        SerializerTest serializerTest = new SerializerTest();
 //        personTest.testJavaSerializer();
 //        personTest.testXmlSerializer();
 //        personTest.testXml2Serializer();
@@ -175,7 +175,7 @@ public class PersonTest {
 //        personTest.testProtobufSerializer();
 //		  personTest.testProtostuffSerializer();
 //		  personTest.testAvroSerializer();
-        personTest.testAvroSerializer2();
+        serializerTest.testAvroSerializer2();
 //        personTest.testAvroSerializer3();
 //		personTest.testMarshallingSerializer();
 	}
