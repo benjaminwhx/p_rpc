@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <contextName>IOU_TRADE</contextName>
+    <property name="DEV_HOME" value="/export/data/logs/iou_trade"/>
+    <property name="LOG_PATTEN" value="%-35(%d{yyyy-MM-dd HH:mm:ss} [%thread]) %highlight(%-5level) %cyan(%logger{32}) - %msg%n"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoder 默认配置为PatternLayoutEncoder -->
+        <encoder>
+            <pattern>${LOG_PATTEN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>
