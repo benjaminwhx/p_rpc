@@ -13,6 +13,7 @@ import com.github.serializer.*;
 import com.google.protobuf.ByteString;
 import org.openjdk.jmh.annotations.*;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ public class BenchmarkTest {
 	public ISerializer protostuffSerializer = new ProtostuffSerializer();
 	public ISerializer avroSerializer = new AvroSerializer();
 	public ISerializer marshallingSerializer = new MarshallingSerializer();
+	public ISerializer msgPack2Serializer = new MsgPack2Serializer();
 	private MessageProtos.Message probufBean = getProtobufBean();
 	private MessageAvro avroBean = getAvroBean();
 	private MessageObj pojoBean = getPojoBean();
@@ -54,6 +56,7 @@ public class BenchmarkTest {
 	byte[] protostuffSerializeBytes = protostuffSerializer.serialize(pojoBean);
 	byte[] avroSerializeBytes = avroSerializer.serialize(avroBean);
 	byte[] marshallingSerializeBytes = marshallingSerializer.serialize(pojoBean);
+	byte[] msgPack2SerializeBytes = msgPack2Serializer.serialize(pojoBean);
 
 	private MessageProtos.Message getProtobufBean() {
 		MessageProtos.Message.Builder messageBuilder = MessageProtos.Message.newBuilder();
@@ -197,5 +200,17 @@ public class BenchmarkTest {
 	@Benchmark
 	public MessageObj testMarshallingDeSerialize() {
 		return marshallingSerializer.deserialize(marshallingSerializeBytes, MessageObj.class);
+	}
+
+	@Benchmark
+	public byte[] testMsgPackSerialize() throws IOException {
+		// BenchmarkTest.testMsgPackSerialize  avgt   15  4692.698 ± 336.441  ns/op
+		return msgPack2Serializer.serialize(pojoBean);
+	}
+
+	@Benchmark
+	public MessageObj testMsgPackDeSerialize() {
+		// BenchmarkTest.testMsgPackDeSerialize  avgt   15  4935.865 ± 391.811  ns/op
+		return msgPack2Serializer.deserialize(msgPack2SerializeBytes, MessageObj.class);
 	}
 }

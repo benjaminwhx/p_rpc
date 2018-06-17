@@ -1,5 +1,6 @@
 package com.github;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.bean.Person;
 import com.github.bean.avro.User;
 import com.github.bean.protobuf.AddressBookProtos;
@@ -13,6 +14,11 @@ import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.*;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.avro.specific.SpecificDatumWriter;
+import org.msgpack.core.MessageBufferPacker;
+import org.msgpack.core.MessagePack;
+import org.msgpack.core.MessageUnpacker;
+import org.msgpack.jackson.dataformat.MessagePackFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -165,18 +171,46 @@ public class SerializerTest {
 		System.out.println(dePerson);
 	}
 
+	private void testMsgPackSerializer() throws IOException {
+		MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
+		packer.packInt(21);
+		packer.packString("ben");
+		packer.close();
+		byte[] bytes = packer.toByteArray();
+		MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(bytes);
+		int age = unpacker.unpackInt();
+		String name = unpacker.unpackString();
+		unpacker.close();
+		System.out.println("age: " + age + ", name: " + name);
+	}
+
+	private void testMsgPackSerializer2() throws IOException {
+		// Instantiate ObjectMapper for MessagePack
+		ObjectMapper objectMapper = new ObjectMapper(new MessagePackFactory());
+
+		// Serialize a Java object to byte array
+		Person person = new Person(21, "ben");
+		byte[] bytes = objectMapper.writeValueAsBytes(person);
+
+		// Deserialize the byte array to a Java object
+		Person deserialized = objectMapper.readValue(bytes, Person.class);
+		System.out.println(deserialized);
+	}
+
     public static void main(String[] args) throws Exception {
         SerializerTest serializerTest = new SerializerTest();
-//        personTest.testJavaSerializer();
-//        personTest.testXmlSerializer();
-//        personTest.testXml2Serializer();
-//        personTest.testFastJsonSerializer();
-//        personTest.testHessianSerializer();
-//        personTest.testProtobufSerializer();
-//		  personTest.testProtostuffSerializer();
-//		  personTest.testAvroSerializer();
-        serializerTest.testAvroSerializer2();
-//        personTest.testAvroSerializer3();
-//		personTest.testMarshallingSerializer();
+//        serializerTest.testJavaSerializer();
+//        serializerTest.testXmlSerializer();
+//        serializerTest.testXml2Serializer();
+//        serializerTest.testFastJsonSerializer();
+//        serializerTest.testHessianSerializer();
+//        serializerTest.testProtobufSerializer();
+//		  serializerTest.testProtostuffSerializer();
+//		  serializerTest.testAvroSerializer();
+//        serializerTest.testAvroSerializer2();
+//        serializerTest.testAvroSerializer3();
+//		  serializerTest.testMarshallingSerializer();
+//		serializerTest.testMsgPackSerializer();
+		serializerTest.testMsgPackSerializer2();
 	}
 }

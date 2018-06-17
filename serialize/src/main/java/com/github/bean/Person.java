@@ -1,6 +1,7 @@
 package com.github.bean;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -10,6 +11,7 @@ import java.io.Serializable;
  * Time: 10:54 am
  */
 @Data
+@NoArgsConstructor
 public class Person implements Serializable {
     private int age;
     private String name;

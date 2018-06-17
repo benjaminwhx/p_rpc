@@ -18,5 +18,6 @@ public class SerializeSizeTest {
 		System.out.println("Protostuff序列化bytes长度：" + test.protostuffSerializeBytes.length);
 		System.out.println("Avro序列化bytes长度：" + test.avroSerializeBytes.length);
 		System.out.println("JBoss-Marshalling序列化bytes长度：" + test.marshallingSerializeBytes.length);
+		System.out.println("MsgPack序列化bytes长度：" + test.msgPack2SerializeBytes.length);
 	}
 }
